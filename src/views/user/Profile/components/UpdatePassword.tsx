@@ -1,0 +1,55 @@
+import { PasswordFormInput } from '@/components'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Button, Card, CardHeader } from 'react-bootstrap'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+
+const UpdatePassword = () => {
+  const updatePasswordSchema = yup.object({
+    currentPassword: yup.string().required('Please enter  your current password'),
+    newPassword: yup.string().required('Please enter your new password'),
+    confirmPassword: yup.string().oneOf([yup.ref('newPassword')], "New password and confirm password doesn't match"),
+  })
+
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(updatePasswordSchema),
+  })
+  return (
+    <Card className="border">
+      <CardHeader className="border-bottom">
+        <h4 className="card-header-title">Update Password</h4>
+        <p className="mb-0">
+          Your current email address is <span className="text-primary">example@gmail.com</span>
+        </p>
+      </CardHeader>
+
+      <form onSubmit={handleSubmit(() => {})} className="card-body">
+        <PasswordFormInput
+          name="currentPassword"
+          label="Current password"
+          placeholder="Enter current password"
+          containerClass="mb-3"
+          control={control}
+        />
+
+        <PasswordFormInput name="newPassword" label="Enter new password" placeholder="Enter new password" containerClass="mb-3" control={control} />
+
+        <PasswordFormInput
+          name="confirmPassword"
+          label="Confirm new password"
+          placeholder="Confirm new password"
+          containerClass="mb-3"
+          control={control}
+        />
+
+        <div className="text-end">
+          <Button type="submit" variant="primary" className="mb-0">
+            Change Password
+          </Button>
+        </div>
+      </form>
+    </Card>
+  )
+}
+
+export default UpdatePassword
